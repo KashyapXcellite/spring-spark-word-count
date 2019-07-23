@@ -1,0 +1,41 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	// https://mvnrepository.com/artifact/com.thoughtworks.paranamer/paranamer
+	compile group: 'com.thoughtworks.paranamer', name: 'paranamer', version: '2.8'
+	// https://mvnrepository.com/artifact/org.apache.spark/spark-core
+	compile group: 'org.apache.spark', name: 'spark-core_2.12', version: '2.4.3'
+	
+	//logging with slf4j + logback + ELK
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.2'
+	compile group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
+	compile group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.2'
+	compile group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '4.9'
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+configurations.all {
+	resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+		if (details.requested.name == 'log4j') {
+			details.useTarget "org.slf4j:log4j-over-slf4j:1.7.5"
+		}
+	}
+}
